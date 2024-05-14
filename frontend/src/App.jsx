@@ -4,12 +4,14 @@ import GetImage from "./components/GetImage";
 
 const App = () => {
   return (
-    <div className="min-h-screen pt-1 bg-[#282828] relative">
+    <div className="min-h-screen pt-1 bg-[#282828] relative overflow-auto">
       <h1 className="text-6xl text-white font-bold text-center my-5 ">
         Welcome To Visual Vault
       </h1>
       <UploadImage />
-      <GetImage />
+      <div className="p-5 flex justify-center">
+        <GetImage />
+      </div>
     </div>
   );
 };

@@ -1,10 +1,14 @@
-const ImageCard = () => {
+const ImageCard = (props) => {
   return (
-    <div className="m-2 bg-[#98971a] w-[370px]">
-      <img src="/" alt="Image" />
+    <div className="bg-[#a89984] md:max-w-[400px] max-w-[440px] h-[380px]">
+      <img
+        src={props.img}
+        alt="Image"
+        className="md:max:h-[320px] h-[320px] w-full "
+      />
       <div className="text-xl">
-        <span className="font-bold">Title</span>
-        <p>Image Description</p>
+        <span className="font-bold">{props.title}</span>
+        <p>{props.description}</p>
       </div>
     </div>
   );
