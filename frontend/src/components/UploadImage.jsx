@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+const API_URL = `http://localhost:4500/api/images`;
 const UploadImage = () => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
@@ -17,13 +17,34 @@ const UploadImage = () => {
     setDescription(e.target.value);
   };
 
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
     console.log("Image:", image);
     console.log("Title:", title);
     console.log("Description:", description);
 
-    // Add further processing here, such as sending the data to your backend
+    // Create a new FormData object
+    const formData = new FormData();
+
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("description", description);
+
+    try {
+      // Send a POST request to the backend API endpoint
+      const response = await fetch(API_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Image uploaded successfully");
+      } else {
+        console.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
   return (
     <div
