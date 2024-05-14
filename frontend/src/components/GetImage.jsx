@@ -3,8 +3,7 @@ import dog1 from "../assets/images/dog1.jpg";
 import dog2 from "../assets/images/dog2.jpg";
 const GetImage = () => {
   return (
-    <div className="text-white">
-      Get Images
+    <div className="">
       <div
         className="text-white grid md:grid-cols-3 
         lg:grid-cols-5 sm:grid-cols-2  gap-5 "
