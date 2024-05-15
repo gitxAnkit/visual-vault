@@ -7,18 +7,14 @@ const imageRoutes = require('./routes/route');
 const app = express();
 
 //config
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: "./.env" });
 
 // connection
 connectDB();
 
 //middlewares
 app.use(express.json());
-app.use(cors(
-    {
-        origin: 'http://localhost:5173'
-    }
-));
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 
 // routes

@@ -1,15 +1,12 @@
 const express = require('express');
 const { handleGetImage,
-    handleUploadImage,
-    handleGetImageById } = require("../controllers/routeControllers");
-const multer = require('multer');
-
+    handleUploadImage, } = require("../controllers/routeControllers");
+const upload = require('../middlewares/multer');
 const router = express.Router();
 
 router.route("/api/images")
-    .post(handleUploadImage)
+    .post(upload.single('image'), handleUploadImage)
     .get(handleGetImage);
-router.route("/api/images/:id")
-    .get(handleGetImageById);
+
 
 module.exports = router;

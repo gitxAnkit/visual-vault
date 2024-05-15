@@ -10,14 +10,15 @@ const ImageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageData: {
-        type: Buffer, // Store image data as binary data
+    public_id: {
+        type: String,
         required: true
     },
-    contentType: {
-        type: String, // MIME type of the image
+    url: {
+        type: String,
         required: true
     }
+
 });
 
 // Create a model using the schema
