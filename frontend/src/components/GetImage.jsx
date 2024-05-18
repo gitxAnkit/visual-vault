@@ -25,7 +25,7 @@ const GetImage = () => {
   return (
     <div className="">
       <div
-        className="text-white grid md:grid-cols-3 
+        className=" grid md:grid-cols-3 
         lg:grid-cols-5 sm:grid-cols-2  gap-5 "
       >
         {images.map((image, index) => (
@@ -36,7 +36,6 @@ const GetImage = () => {
             description={image.description}
           />
         ))}
-        {console.log("Image list: ", images)}
       </div>
     </div>
   );

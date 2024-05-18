@@ -6,7 +6,6 @@ const App = () => {
   const [open, setOpen] = useState(false);
 
   const handleGetImages = (e, open) => {
-    console.log("Images, Open state:", open);
     setOpen(!open);
   };
   return (
