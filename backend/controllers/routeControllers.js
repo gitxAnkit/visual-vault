@@ -45,9 +45,36 @@ async function handleGetImage(req, res) {
         res.status(500).json({ error: 'Failed to fetch images from Cloudinary' });
     }
 }
+async function handleDeleteImage(req, res) {
+    try {
+
+        const result = await Image.findByIdAndDelete(req.params.id);
+
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Image not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Deleted successfully"
+        });
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete image"
+        });
+    }
+}
+
+
 
 
 module.exports = {
     handleUploadImage,
     handleGetImage,
+    handleDeleteImage
 }
