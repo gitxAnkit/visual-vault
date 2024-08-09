@@ -70,11 +70,68 @@ async function handleDeleteImage(req, res) {
     }
 }
 
+async function handleUpdateImageTitle(req, res) {
+    try {
+        const { newTitle } = req.body;
+        const img = await Image.findById(req.params.id);
+        if (!img) {
+            return res.status(404).json({
+                success: false,
+                message: "Image not found"
+            });
+        }
+        img.title = newTitle;
+        await img.save();
 
+        return res.json({
+            success: true,
+            message: "Title updated"
+        })
+
+
+    } catch (error) {
+        console.error('Error updating image title:', error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to update image"
+        });
+
+    }
+}
+async function handleUpdateImageDescription(req, res) {
+    try {
+        const { newDescription } = req.body;
+        const img = await Image.findById(req.params.id);
+        if (!img) {
+            return res.status(404).json({
+                success: false,
+                message: "Image not found"
+            });
+        }
+        img.description = newDescription;
+        await img.save();
+
+        return res.json({
+            success: true,
+            message: "Description updated"
+        })
+
+
+    } catch (error) {
+        console.error('Error updating image description:', error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to update description"
+        });
+
+    }
+}
 
 
 module.exports = {
     handleUploadImage,
     handleGetImage,
-    handleDeleteImage
+    handleDeleteImage,
+    handleUpdateImageTitle,
+    handleUpdateImageDescription
 }
