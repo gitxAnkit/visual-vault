@@ -47,19 +47,31 @@ async function handleGetImage(req, res) {
 }
 async function handleDeleteImage(req, res) {
     try {
+        const image = await Image.findById(req.params.id);
 
-        const result = await Image.findByIdAndDelete(req.params.id);
-
-        if (!result) {
+        if (!image) {
             return res.status(404).json({
                 success: false,
                 message: "Image not found"
             });
         }
 
+        // Delete the image from Cloudinary
+        const cloudinaryResult = await cloudinary.uploader.destroy(image.public_id);
+
+        if (cloudinaryResult.result !== 'ok') {
+            return res.status(500).json({
+                success: false,
+                message: "Failed to delete image from Cloudinary"
+            });
+        }
+
+        // Delete the image from the database
+        await Image.findByIdAndDelete(req.params.id);
+
         res.json({
             success: true,
-            message: "Deleted successfully"
+            message: "Image deleted successfully"
         });
     } catch (error) {
         console.error('Error deleting image:', error);
