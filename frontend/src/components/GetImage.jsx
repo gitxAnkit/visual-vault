@@ -1,11 +1,31 @@
+import AddImages from "./AddImages";
 import ImageCard from "./ImageCard";
 import { useEffect, useState } from "react";
+import PopupForm from "./PopupForm";
 
 const API_URL = `http://localhost:4500/api/images`;
 
 const GetImage = ({ onDelete, handleTitleUpdate, handleDescriptionUpdate }) => {
   const [images, setImages] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+  const handleImageUpload = async () => {
+    // Logic to re-fetch or re-render the images after upload
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error("Failed to fetch images");
+      }
+      const data = await response.json();
+      setImages(data.images); // Set images here
+      console.log(data.images);
+    } catch (error) {
+      console.error("Error re-fetching images:", error);
+    }
+  };
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -44,6 +64,12 @@ const GetImage = ({ onDelete, handleTitleUpdate, handleDescriptionUpdate }) => {
           />
         ))}
       </div>
+      <AddImages onClick={togglePopup} />
+      <PopupForm
+        isOpen={isPopupOpen}
+        onClose={togglePopup}
+        onImageUpload={handleImageUpload}
+      />
     </div>
   );
 };

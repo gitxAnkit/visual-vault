@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import GetImage from "./GetImage";
 import Albums from "./Albums";
+import AddImages from "./AddImages";
 const API_URL = `http://localhost:4500/api/images`;
 
 const Home = () => {
