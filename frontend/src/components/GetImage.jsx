@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const API_URL = `http://localhost:4500/api/images`;
 
-const GetImage = () => {
+const GetImage = ({ onDelete, handleTitleUpdate, handleDescriptionUpdate }) => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -14,7 +14,8 @@ const GetImage = () => {
           throw new Error("Failed to fetch images");
         }
         const data = await response.json();
-        setImages(data.images);
+        setImages(data.images); // Set images here
+        console.log(data.images);
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -26,7 +27,7 @@ const GetImage = () => {
     <div className="">
       <div
         className=" grid md:grid-cols-3 
-        lg:grid-cols-5 sm:grid-cols-2  gap-5 "
+        lg:grid-cols-5 sm:grid-cols-2 gap-5 py-4"
       >
         {images.map((image, index) => (
           <ImageCard
@@ -34,6 +35,12 @@ const GetImage = () => {
             img={image.url}
             title={image.title}
             description={image.description}
+            onDelete={onDelete}
+            id={image._id}
+            setImages={setImages}
+            images={images}
+            handleDescriptionUpdate={handleDescriptionUpdate}
+            handleTitleUpdate={handleTitleUpdate} // Corrected typo
           />
         ))}
       </div>

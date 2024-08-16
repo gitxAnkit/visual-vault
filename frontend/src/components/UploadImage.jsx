@@ -1,5 +1,6 @@
 import { useState } from "react";
-const API_URL = `http://localhost:4500/api/images`;
+const API_URL = `http://localhost:4500/api`;
+
 const UploadImage = () => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
@@ -32,7 +33,7 @@ const UploadImage = () => {
 
     try {
       // Send a POST request to the backend API endpoint
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_URL}/images/upload`, {
         method: "POST",
         body: formData,
       });
@@ -76,7 +77,6 @@ const UploadImage = () => {
             name="title"
             value={title}
             onChange={handleTitleChange}
-            required
           />
         </div>
         <div className="md:flex m-5">
@@ -87,7 +87,6 @@ const UploadImage = () => {
             rows="3"
             value={description}
             onChange={handleDescriptionChange}
-            required
           ></textarea>
         </div>
         <div className="mt-10 flex justify-center">
