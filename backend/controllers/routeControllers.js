@@ -1,143 +1,94 @@
 const cloudinary = require('../utils/cloudinary');
 const Image = require('../models/imageModel');
+const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
+const ErrorHandler = require('../utils/errorHandler');
 
-async function handleUploadImage(req, res) {
+const handleUploadImage = catchAsyncErrors(async (req, res) => {
 
-    try {
-        const { path } = req.file;
-        let { title, description } = req.body;
-        const result = await cloudinary.uploader.upload(path, {
-            public_id: req.file.filename,
-            folder: 'visual-vault',
+    const { path } = req.file;
+    let { title, description } = req.body;
+    const result = await cloudinary.uploader.upload(path, {
+        public_id: req.file.filename,
+        folder: 'visual-vault',
 
-        });
+    });
+    const imageUrl = result.secure_url;
 
-        const imageUrl = result.secure_url;
+    await Image.create({
+        title: title,
+        description: description,
+        public_id: result.public_id,
+        url: imageUrl,
+    })
+    res.status(201).json({
+        imageUrl,
+        public_id: result.public_id
+    });
+});
 
-        await Image.create({
-            title: title,
-            description: description,
-            public_id: result.public_id,
-            url: imageUrl,
-        })
+const handleGetImage = catchAsyncErrors(async (req, res) => {
 
-        console.log("Upload result: ", result);
-        res.json({
-            imageUrl,
-            public_id: result.public_id
-        });
+    const images = await Image.find();
+    res.status(200).json({ images });
+});
+
+const handleDeleteImage = catchAsyncErrors(async (req, res, next) => {
+
+    const image = await Image.findById(req.params.id);
+    // const image = await Image.findOne(req.params.url);
+    if (!image) {
+        return next(new ErrorHandler("Image not found!", 404));
     }
-    catch (error) {
-        console.error('Error uploading image to Cloudinary:', error);
-        res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
+
+    // Delete the image from Cloudinary
+    const cloudinaryResult = await cloudinary.uploader.destroy(image.public_id);
+
+    if (cloudinaryResult.result !== 'ok') {
+
+        return next(new ErrorHandler("Failed to delete image from cloudinary"));
     }
-}
 
-async function handleGetImage(req, res) {
-    try {
-        const images = await Image.find();
+    // Delete the image from the database
+    await Image.findByIdAndDelete(req.params.id);
 
-        console.log("Images:", images);
+    res.status(200).json({
+        success: true,
+        message: "Image deleted successfully"
+    });
 
-        res.json({ images });
-    } catch (error) {
-        console.error('Error fetching images from Cloudinary:', error);
-        res.status(500).json({ error: 'Failed to fetch images from Cloudinary' });
+});
+
+const handleUpdateImageTitle = catchAsyncErrors(async (req, res, next) => {
+
+    const { newTitle } = req.body;
+    const img = await Image.findById(req.params.id);
+    if (!img) {
+        return next(new ErrorHandler("Image not found", 404));
     }
-}
-async function handleDeleteImage(req, res) {
-    try {
-        const image = await Image.findById(req.params.id);
+    img.title = newTitle;
+    await img.save();
 
-        if (!image) {
-            return res.status(404).json({
-                success: false,
-                message: "Image not found"
-            });
-        }
+    return res.status(200).json({
+        success: true,
+        message: "Title updated"
+    })
+});
 
-        // Delete the image from Cloudinary
-        const cloudinaryResult = await cloudinary.uploader.destroy(image.public_id);
+const handleUpdateImageDescription = catchAsyncErrors(async (req, res, next) => {
 
-        if (cloudinaryResult.result !== 'ok') {
-            return res.status(500).json({
-                success: false,
-                message: "Failed to delete image from Cloudinary"
-            });
-        }
-
-        // Delete the image from the database
-        await Image.findByIdAndDelete(req.params.id);
-
-        res.json({
-            success: true,
-            message: "Image deleted successfully"
-        });
-    } catch (error) {
-        console.error('Error deleting image:', error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete image"
-        });
+    const { newDescription } = req.body;
+    const img = await Image.findById(req.params.id);
+    if (!img) {
+        return next(new ErrorHandler("Image not found", 404));
     }
-}
+    img.description = newDescription;
+    await img.save();
 
-async function handleUpdateImageTitle(req, res) {
-    try {
-        const { newTitle } = req.body;
-        const img = await Image.findById(req.params.id);
-        if (!img) {
-            return res.status(404).json({
-                success: false,
-                message: "Image not found"
-            });
-        }
-        img.title = newTitle;
-        await img.save();
-
-        return res.json({
-            success: true,
-            message: "Title updated"
-        })
-
-
-    } catch (error) {
-        console.error('Error updating image title:', error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to update image"
-        });
-
-    }
-}
-async function handleUpdateImageDescription(req, res) {
-    try {
-        const { newDescription } = req.body;
-        const img = await Image.findById(req.params.id);
-        if (!img) {
-            return res.status(404).json({
-                success: false,
-                message: "Image not found"
-            });
-        }
-        img.description = newDescription;
-        await img.save();
-
-        return res.json({
-            success: true,
-            message: "Description updated"
-        })
-
-
-    } catch (error) {
-        console.error('Error updating image description:', error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to update description"
-        });
-
-    }
-}
+    return res.json({
+        success: true,
+        message: "Description updated"
+    })
+});
 
 
 module.exports = {

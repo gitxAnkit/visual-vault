@@ -6,12 +6,14 @@ const { handleGetImage,
 const upload = require('../middlewares/multer');
 const router = express.Router();
 
+//Image routes
 router.route("/api/images").get(handleGetImage);
 router.route("/api/images/upload").post(upload.single('image'), handleUploadImage);
 router.route("/api/images/delete/:id").delete(handleDeleteImage);
 
 router.route("/api/images/update/title/:id").put(handleUpdateImageTitle);
 router.route("/api/images/update/description/:id").put(handleUpdateImageDescription);
+
 
 
 

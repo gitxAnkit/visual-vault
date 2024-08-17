@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 const ImageSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: false
     },
     description: {
         type: String,
-        required: true
+        required: false
     },
     public_id: {
         type: String,
@@ -17,6 +17,12 @@ const ImageSchema = new mongoose.Schema({
     url: {
         type: String,
         required: true
+    },
+    albumName: {
+        type: String
+    },
+    album_id: {
+        type: String,
     }
 
 });
