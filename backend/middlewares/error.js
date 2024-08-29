@@ -17,6 +17,4 @@ module.exports = (err, req, res, next) => {
         err = new ErrorHandler(message, 400);
     }
 
-
-
 }; 

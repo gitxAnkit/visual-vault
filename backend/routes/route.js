@@ -1,6 +1,7 @@
 const express = require('express');
 const { handleGetImage,
-    handleUploadImage, handleDeleteImage,
+    handleUploadImage,
+    handleDeleteImage,
     handleUpdateImageTitle,
     handleUpdateImageDescription } = require("../controllers/routeControllers");
 const upload = require('../middlewares/multer');
