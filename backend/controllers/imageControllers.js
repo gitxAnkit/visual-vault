@@ -3,6 +3,9 @@ const Image = require('../models/imageModel');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const ErrorHandler = require('../utils/errorHandler');
 
+// @desc Upload Image
+// @route POST /images
+// @access Private
 const handleUploadImage = catchAsyncErrors(async (req, res) => {
 
     const { path } = req.file;
@@ -26,20 +29,24 @@ const handleUploadImage = catchAsyncErrors(async (req, res) => {
     });
 });
 
+// @desc Get all images
+// @route GET /images/
+// @access Private
 const handleGetImage = catchAsyncErrors(async (req, res) => {
 
     const images = await Image.find();
     res.status(200).json({ images });
 });
 
+// @desc Delete image
+// @route DELTE /image/:id
+// @access Private
 const handleDeleteImage = catchAsyncErrors(async (req, res, next) => {
 
     const image = await Image.findById(req.params.id);
-    // const image = await Image.findOne(req.params.url);
     if (!image) {
         return next(new ErrorHandler("Image not found!", 404));
     }
-
     // Delete the image from Cloudinary
     const cloudinaryResult = await cloudinary.uploader.destroy(image.public_id);
 
@@ -58,6 +65,9 @@ const handleDeleteImage = catchAsyncErrors(async (req, res, next) => {
 
 });
 
+// @desc Update image title
+// @route PUT /image/:id/title
+// @access Private
 const handleUpdateImageTitle = catchAsyncErrors(async (req, res, next) => {
 
     const { newTitle } = req.body;
@@ -74,6 +84,9 @@ const handleUpdateImageTitle = catchAsyncErrors(async (req, res, next) => {
     })
 });
 
+// @desc Update Image description
+// @route PUT /image/:id/description
+// @access Private
 const handleUpdateImageDescription = catchAsyncErrors(async (req, res, next) => {
 
     const { newDescription } = req.body;

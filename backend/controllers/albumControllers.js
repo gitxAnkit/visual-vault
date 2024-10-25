@@ -2,7 +2,9 @@ const Album = require("../models/albumModel");
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const ErrorHandler = require('../utils/errorHandler');
 
-// Create album
+// @desc Create new album 
+// @route POST /albums
+// @access Private
 const handleCreateAlbum = catchAsyncErrors(async (req, res, next) => {
     const { albumName } = req.body;
 
@@ -20,12 +22,18 @@ const handleCreateAlbum = catchAsyncErrors(async (req, res, next) => {
         message: "Album created successfully"
     });
 });
-// Get all albums
+
+// @desc Get all albums 
+// @route GET /albums
+// @access Private
 const handleGetAlbums = catchAsyncErrors(async (req, res) => {
     const albums = await Album.find();
     res.status(200).json({ albums });
 });
-// Rename
+
+// @desc Rename album
+// @route GET /album/:id
+// @access Private
 const handleAlbumRename = catchAsyncErrors(async (req, res, next) => {
 
     const { newAlbumName } = req.body;

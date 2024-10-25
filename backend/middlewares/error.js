@@ -1,9 +1,11 @@
 const ErrorHandler = require('../utils/errorHandler');
 
-module.exports = (err, req, res, next) => {
+const errorMiddleware = (err, req, res, next) => {
 
-    err.statusCode = err.statusCode || 500;
-    err.message = err.message || "Internal Server Error";
+    err = new ErrorHandler(
+        err.message || "Internal Server Error",
+        err.statusCode || 500
+    );
 
     //Mongodb error
     if (err.name === "CastError") {
@@ -16,5 +18,12 @@ module.exports = (err, req, res, next) => {
         const message = `Duplicate ${Object.keys(err.keyValue)} Entered`;
         err = new ErrorHandler(message, 400);
     }
+    // Customize error response format
+    res.status(err.statusCode).json({
+        success: false,
+        message: err.message,
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    });
 
-}; 
+};
+module.exports = errorMiddleware;
