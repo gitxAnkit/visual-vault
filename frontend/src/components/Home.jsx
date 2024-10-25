@@ -105,15 +105,18 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-white">
       <NavBar fetchImages={handleGetImages} handleGetAlbums={handleGetAlbums} />
-      {currentView === "images" ? (
-        <GetImage
-          onDelete={onDelete}
-          handleTitleUpdate={handleTitleUpdate}
-          handleDescriptionUpdate={handleDescriptionUpdate}
-        />
-      ) : (
-        <Albums />
-      )}
+      {/* <div className="h-[24px]"></div> */}
+      <div className="mt-[100px] overflow-scroll ">
+        {currentView === "images" ? (
+          <GetImage
+            onDelete={onDelete}
+            handleTitleUpdate={handleTitleUpdate}
+            handleDescriptionUpdate={handleDescriptionUpdate}
+          />
+        ) : (
+          <Albums />
+        )}
+      </div>
     </div>
   );
 };

@@ -13,6 +13,14 @@ const Albums = () => {
         <AlbumCard />
         <AlbumCard />
         <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
+        <AlbumCard />
       </div>
     </div>
   );
