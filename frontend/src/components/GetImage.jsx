@@ -11,7 +11,7 @@ import { setPopupOpen } from "../features/images/imageSlice";
 const GetImage = () => {
   const dispatch = useDispatch();
   const { images, loading, error } = useSelector((state) => state.images);
-
+  const { isPopupOpen } = useSelector((state) => state.images);
   const togglePopup = () => {
     dispatch(setPopupOpen());
   };
@@ -21,7 +21,6 @@ const GetImage = () => {
   }, [dispatch]);
 
   if (loading) return <Loader />;
-  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <ErrorBoundary>
@@ -30,12 +29,12 @@ const GetImage = () => {
           className="grid md:grid-cols-3 
         lg:grid-cols-5 sm:grid-cols-2 gap-5 py-4"
         >
-          {images?.map((image) => (
-            <ImageCard key={image._id} image={image} />
+          {images?.map((image, index) => (
+            <ImageCard key={image._id || index} image={image} />
           ))}
         </div>
         <AddImages onClick={togglePopup} />
-        <PopupForm />
+        {isPopupOpen && <PopupForm />}
       </div>
     </ErrorBoundary>
   );

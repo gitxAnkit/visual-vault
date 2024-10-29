@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteImage, fetchImages, uploadImage } from "./imageAction";
+import { deleteImage, fetchImages, updateDescription, updateTitle, uploadImage } from "./imageAction";
 
 const imageSlice = createSlice({
     name: 'images',
@@ -15,7 +15,9 @@ const imageSlice = createSlice({
     },
     reducers: {
         setSelectedImage: (state, action) => {
-            state.selectedImage = action.payload
+            state.selectedImage = action.payload;
+            state.title = action.payload.title;
+            state.description = action.payload.description;
         }
         ,
         clearSelectedImage: (state) => {
@@ -56,13 +58,6 @@ const imageSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            // deleteImage
-            .addCase(deleteImage.fulfilled, (state, action) => {
-                state.images = state.images.filter((image) => image.id !== action.payload);
-            })
-            .addCase(deleteImage.rejected, (state, action) => {
-                state.error = action.payload;
-            })
             //upload Image
             .addCase(uploadImage.pending, (state) => {
                 state.loading = true;
@@ -76,21 +71,39 @@ const imageSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            // Delete Image
+            .addCase(deleteImage.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteImage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.images = state.images.filter(
+                    image => image._id !== action.payload.imageId);
+            })
+            .addCase(deleteImage.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            //Update title
+            .addCase(updateTitle.fulfilled, (state, action) => {
+                state.title = action.payload.newTitle;
+            })
+            .addCase(updateTitle.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+            //Update description 
+            .addCase(updateDescription.fulfilled, (state, action) => {
+                state.description = action.payload.newDescription;
+            })
+            .addCase(updateDescription.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+
+
 
     }
 });
 
 export const { setSelectedImage, clearSuccess, setPopupClose, setPopupOpen, clearErrors, clearSelectedImage, setDescription, setTitle } = imageSlice.actions;
 export default imageSlice.reducer;
-
-// states
-/*
-title, description, images[], img,id, currentImage,error,
-success,isPopupOpen,isHovered, isEditing,
-*/
-// func
-/*
-setImages,handleDescriptionChange,handleTitleChange,
-imageDelete, handleImageChange, ImageUpload,setCurrentImage, setTitle.setDescription
-setIsPopupOpen,
-*/
